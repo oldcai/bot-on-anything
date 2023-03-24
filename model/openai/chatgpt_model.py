@@ -1,5 +1,7 @@
 # encoding:utf-8
+import io
 
+from common.markdown_to_png import markdown_to_png
 from model.model import Model
 from config import model_conf, settings_conf_val
 from common import const
@@ -35,6 +37,14 @@ class ChatGPTModel(Model):
             #     return self.reply_text_stream(query, new_query, from_user_id)
 
             reply_content = self.reply_text(new_query, from_user_id, 0)
+            if any(table_mark in reply_content for table_mark in ["|-", "|:-", "| -"]):
+                context["type"] = "IMAGE"
+                image_storage = io.BytesIO()
+                data = markdown_to_png(reply_content)
+                image_storage.write(data)
+                image_storage.seek(0)
+                return image_storage
+
             #log.debug("[CHATGPT] new_query={}, user={}, reply_cont={}".format(new_query, from_user_id, reply_content))
             return reply_content
 

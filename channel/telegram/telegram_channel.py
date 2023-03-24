@@ -39,9 +39,12 @@ class TelegramChannel(Channel):
     def _dosend(self,query,msg):
         context= dict()
         context['from_user_id'] = str(msg.chat.id)
-        reply_text = super().build_reply_content(query, context)
-        logger.info('[Telegram] reply content: {}'.format(reply_text))
-        bot.reply_to(msg,reply_text)
+        reply_content = super().build_reply_content(query, context)
+        if context.get("type") == 'IMAGE':
+            bot.send_photo(msg.chat.id, reply_content)
+        else:
+            logger.info('[Telegram] reply content: {}'.format(reply_content))
+            bot.reply_to(msg, reply_content)
         
     def _do_send_img(self, msg, reply_user_id):
         try:
