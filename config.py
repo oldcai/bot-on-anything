@@ -6,9 +6,8 @@ import os
 config = {}
 
 
-def load_config():
+def load_config(config_path = "./config.json"):
     global config
-    config_path = "config.json"
     if not os.path.exists(config_path):
         raise Exception('配置文件不存在，请根据config-template.json模板创建config.json文件')
 
@@ -54,10 +53,7 @@ def channel_conf_val(channel_type, key, default=None):
     return val
 
 
-def settings_conf():
-    return config.get('settings')
-
-
-def settings_conf_val(key, default=None):
-    return config.get('settings').get(key, default)
-
+def common_conf_val(key, default=None):
+    if not config.get('common'):
+        return default
+    return config.get('common').get(key, default)

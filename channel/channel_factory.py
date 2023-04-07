@@ -45,5 +45,13 @@ def create_channel(channel_type):
         from channel.http.http_channel import HttpChannel
         return HttpChannel()
 
+    elif channel_type == const.DINGTALK:
+        from channel.dingtalk.dingtalk_channel import DingTalkChannel
+        return DingTalkChannel()
+
+    elif channel_type == const.FEISHU:
+        from channel.feishu.feishu_channel import FeiShuChannel
+        return FeiShuChannel()
+
     else:
         raise RuntimeError("unknown channel_type in config.json: " + channel_type)
